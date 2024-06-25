@@ -1,0 +1,47 @@
+#### REMOVER OBJETOS EXISTENTES ####
+cat("\014") 
+rm(list = ls()
+)
+# install.packages(calendR)
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("readxl")
+library(readxl)
+install.packages("dplyr")
+library(dplyr)
+install.packages("flextable")
+library(flextable)
+install.packages("moments")
+library(moments) 
+install.packages("tidyr")
+library(tidyr)
+library(janitor)
+library(grid)
+library(gridExtra)
+#### DEFINIR DIRECTORIO ####
+getwd() # consultar directorio de trabajo
+setwd("C:/Users/JVEGAL/Desktop/BASES CONASET") # definir directorio
+
+#### CARGAS BASES DE DATOS ####
+perveh23 <- read_excel("perveh23.xlsx")
+table(perveh23$Resultado)
+perveh23 <- filter(perveh23, Resultado == 1)
+
+### GRAFICO FALLECIDOS POR REGIÓN ####
+
+g1 <- perveh23 %>% tabyl(Region) %>% 
+  ggplot(aes(x=Region,y=n,fill=Region)) + 
+  geom_col() +
+  geom_text(aes(label=n), vjust=1.5, col="white", fontface="bold") +
+  guides(fill=FALSE) +
+  labs(x="Region", y="Fallecidos", title="Fallecidos en siniestros de transito por region (Chile 2023)") 
+  grid.arrange(g1,
+               bottom = textGrob(
+                 "n = 1.635
+                 Fuente: Carabineros de Chile - Elaboracion: CONASET",
+                 x = .98,
+                 hjust = 1,
+                 gp = gpar(fontface = "italic", fontsize = 9)
+               )) #utilizamos la funcion grid.arrange para agregar texto en la grafica
